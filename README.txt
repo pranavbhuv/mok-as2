@@ -1,4 +1,4 @@
-Environment: ubuntu 16.04/14.04 with (default-jre package installed)
+Environment: ubuntu 16.04/14.04 with (default-jdk package installed)
 
 *** TO COMPILE:
 	make
