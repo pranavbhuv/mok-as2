@@ -96,7 +96,7 @@ public class UpdatingUIThread implements Runnable{
         //msg = "Angle in Degrees = " + physics.get_angle() * 180 / 3.14;
         //offGraphics.drawString(msg, 20, d.height - 40);
 
-        msg = "Phyical Timer = " + String.format("%.03f", (double) (physics.get_phyTime()/1000.0))
+        msg = "Phyical Timer = " + String.format("%.03f", (physics.get_phyTime()/1000.0))
                 + " secs   Sim. Timer = "+ String.format("%.03f", physics.get_simTime())+" secs" ;
         offGraphics.drawString(msg, 20, d.height - 60);
 
@@ -113,13 +113,13 @@ public class UpdatingUIThread implements Runnable{
               this.failAt_phy = physics.get_phyTime();
               this.failAt_sim = physics.get_simTime();
           }
-          msg = "Failed at time = " + String.format("%.03f", (double) (this.failAt_phy/1000.0)) +
+          msg = "Failed at time = " + String.format("%.03f", (this.failAt_phy/1000.0)) +
                   "  secs  sim. time = "+ String.format("%.03f", this.failAt_sim) +" secs";
           offGraphics.drawString(msg, 20, d.height - 80);
         }
         prev_pole_in_good_state = cur_pole_in_good_state;
-    
-    
+
+
         // Display Simulation Configuration Information
         offGraphics.setColor(trackColor);
         msg = simConfigInfo[0];
@@ -133,20 +133,20 @@ public class UpdatingUIThread implements Runnable{
         for(int i = 0; i < pendulums.length; i++) {
             Pendulum p = pendulums[i];
 
-               
+
             // physics.update_ppos(physics.get_pos() % (2.5));
-    
+
             //Draw cart.
             offGraphics.setColor(cartColor);
             offGraphics.fillRect(pixX(d, p.get_pos() - p.cartWidth/2), pixY(d, 0),
                                  pixDX(d, p.cartWidth), pixDY(d, -0.2));
-    
+
             //Draw pole.
             //    offGraphics.setColor(cartColor);
             offGraphics.drawLine(pixX(d, p.get_pos()), pixY(d, 0),
                     pixX(d, p.get_pos() + Math.sin(p.get_angle()) * p.poleLength),
                     pixY(d, p.poleLength * Math.cos(p.get_angle())));
-    
+
             //Draw action arrow.
             if (p.get_action() != 0) {
                 int signAction = (p.get_action() > 0 ? 1 : (p.get_action() < 0) ? -1 : 0);

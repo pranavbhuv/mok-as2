@@ -3,11 +3,6 @@
  */
 import java.io.*;
 
-enum TriggerType {
-
-    TIMER_TRIGGER,
-    EVENT_TRIGGER,
-}
 
 class Sensor implements Runnable {
 
@@ -66,7 +61,7 @@ class Sensor implements Runnable {
 
             sendMessage_doubleArray(sensorData);
             System.out.println("---------------");
-            
+
             try {
                 Thread.sleep(samplingPeriod_phy_ms);
             } catch (Exception e) {
@@ -83,7 +78,7 @@ class Sensor implements Runnable {
         try {
             out.writeObject(data);
             out.flush();
-            
+
             System.out.print("client> ");
             for(int i=0; i< data.length; i++){
                 System.out.print(data[i] + "  ");

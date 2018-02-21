@@ -17,7 +17,7 @@ public class ControlServer {
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException ioe) {
-            System.out.println("unable to set up port");
+            System.out.println("Unable to set up port:" + ioe);
             System.exit(1);
         }
         System.out.println("Waiting for connection");
@@ -85,11 +85,11 @@ class PoleServer_handler implements Runnable {
                     }
                     continue;
                 }
-                
+
                 double[] data= (double[])(obj);
                 assert(data.length == NUM_POLES * 4);
                 double[] actions = new double[NUM_POLES];
- 
+
                 // Get sensor data of each pole and calculate the action to be
                 // applied to each inverted pendulum
                 // TODO: Current implementation assumes that each pole is
@@ -101,7 +101,7 @@ class PoleServer_handler implements Runnable {
                   angleDot = data[i*4+1];
                   pos = data[i*4+2];
                   posDot = data[i*4+3];
-                  
+
                   System.out.println("server < pole["+i+"]: "+angle+"  "
                       +angleDot+"  "+pos+"  "+posDot);
                   actions[i] = calculate_action(angle, angleDot, pos, posDot);
@@ -116,7 +116,7 @@ class PoleServer_handler implements Runnable {
 
         try {
             if (clientSocket != null) {
-                System.out.println("closing down connection ...");                
+                System.out.println("closing down connection ...");
                 out.writeObject("bye");
                 out.flush();
                 in.close();
@@ -222,7 +222,7 @@ class PoleServer_handler implements Runnable {
         try {
             out.writeObject(data);
             out.flush();
-            
+
             System.out.print("server> ");
             for(int i=0; i< data.length; i++){
                 System.out.print(data[i] + "  ");

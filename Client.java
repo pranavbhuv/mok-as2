@@ -9,7 +9,7 @@ import java.net.*;
 import java.io.*;
 
 public class Client extends Applet {
-
+	static final long serialVersionUID = 1L;//give it a version so compiler won't complain
     TriggerType triggerType = TriggerType.TIMER_TRIGGER;
     // TriggerType triggerType = TriggerType.EVENT_TRIGGER;
     // threshold for event based sensor (in degrees)
@@ -102,7 +102,7 @@ public class Client extends Applet {
         }
         actuatorThread.start();
 
-        animator = new UpdatingUIThread(this, physics, (int) (1000 / fps), configInfo);
+        animator = new UpdatingUIThread(this, physics, (1000 / fps), configInfo);
         if (updatingUIThread == null) {
             updatingUIThread = new Thread(animator);
         }

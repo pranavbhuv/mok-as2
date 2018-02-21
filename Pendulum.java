@@ -4,30 +4,23 @@ import java.awt.event.*;
 import java.net.*;
 import java.io.*;
 
-enum PoleState {
-    NORMAL,
-    FAILED,
-}
-
 public class Pendulum {
     public int pole_id;       // ID of the pole
     public double init_pos;   // initial position
     public double pos, posDot, angle, angleDot;
     public double prevAngle, angleDDot, posDDot;
     public double action = 0.75;
-    
+
     public final double cartMass = 1.;
     public final double poleMass = 0.1;
     public final double poleLength = 1.;
 
-    ;
     public final double forceMag = 30.;
     public final double fricCart = 0.00005;
     public final double fricPole = 0.005;
     public final double totalMass = cartMass + poleMass;
     public final double halfPole = 0.5 * poleLength;
 
-    ;
     public final double poleMassLength = halfPole * poleMass;
     public final double fourthirds = 4. / 3.;
 
