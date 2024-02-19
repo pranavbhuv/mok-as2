@@ -157,51 +157,20 @@ class PoleServer_handler implements Runnable {
     // independently. The interface needs to be changed if the control of one
     // pendulum needs sensing data from other pendulums.
     double calculate_action(double angle, double angleDot, double pos, double posDot) {
-        double action = 0;
-        // if (angle > 0 && angleDiff < 0) {
-        if (angle > 0) {
-            if (angle > 65 * 0.01745) {
-                action = 10;
-            } else if (angle > 60 * 0.01745) {
-                action = 8;
-            } else if (angle > 50 * 0.01745) {
-                action = 7.5;
-            } else if (angle > 30 * 0.01745) {
-                action = 4;
-            } else if (angle > 20 * 0.01745) {
-                action = 2;
-            } else if (angle > 10 * 0.01745) {
-                action = 0.5;
-            } else if (angle > 5 * 0.01745) {
-                action = 0.2;
-            } else if (angle > 2 * 0.01745) {
-                action = 0.1;
-            } else {
-                action = 0;
-            }
-        } else if (angle < 0) {
-            if (angle < -65 * 0.01745) {
-                action = -10;
-            } else if (angle < -60 * 0.01745) {
-                action = -8;
-            } else if (angle < -50 * 0.01745) {
-                action = -7.5;
-            } else if (angle < -30 * 0.01745) {
-                action = -4;
-            } else if (angle < -20 * 0.01745) {
-                action = -2;
-            } else if (angle < -10 * 0.01745) {
-                action = -0.5;
-            } else if (angle < -5 * 0.01745) {
-                action = -0.2;
-            } else if (angle < -2 * 0.01745) {
-                action = -0.1;
-            } else {
-                action = 0;
-            }
-        } else {
-            action = 0.;
-        }
+        // Constants for PD controller (Tune these constants)
+        double Kp = 1.5; // Proportional gain
+        double Kd = 0.05; // Derivative gain
+        double targetPos = 2.0; // Example target position
+        double posError = targetPos - pos; // Position error
+        double targetVel = posError / 10;
+        double targetAngle = (targetVel - posDot);
+        double angleControl = Kp * (angle - targetAngle * 0.0175) + Kd * angleDot;
+        System.out.println("pos:" + pos);
+        System.out.println("vel:" + posDot);
+        System.out.println("targetAn:" + targetAngle);
+        double posControl = 0;
+        double action = angleControl + posControl;
+        action = Math.max(-10, Math.min(10, action));
         return action;
     }
 

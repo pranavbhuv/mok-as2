@@ -1,3 +1,4 @@
+
 /*
 <Applet Code="Client.class" fps=10 width=600 height=800> </Applet>
  */
@@ -9,14 +10,14 @@ import java.net.*;
 import java.io.*;
 
 public class Client extends Applet {
-	static final long serialVersionUID = 1L;//give it a version so compiler won't complain
+    static final long serialVersionUID = 1L;// give it a version so compiler won't complain
     TriggerType triggerType = TriggerType.TIMER_TRIGGER;
     // TriggerType triggerType = TriggerType.EVENT_TRIGGER;
     // threshold for event based sensor (in degrees)
     double threshold = 5;
     // The speed of simulation
     // (How many simulation second elapses when 1 second real time elapses)
-    double simSpeed = 0.1;
+    double simSpeed = 0.5;
     // Sensor sampling rate (per simulation second)
     double sensorSamplingRate = 100;
     // advance of simulation time (in second) per step
@@ -53,22 +54,21 @@ public class Client extends Applet {
         configInfo = new String[2];
         StringBuilder sb = new StringBuilder();
         sb.append("Sim. Speed: ").append(String.format("%.3f  ", simSpeed));
-        sb.append("   Sim. Step: ").append(String.format("%.3f sec  ",tau_sim));
+        sb.append("   Sim. Step: ").append(String.format("%.3f sec  ", tau_sim));
         configInfo[0] = sb.toString();
 
         sb = new StringBuilder();
-        if(triggerType == TriggerType.EVENT_TRIGGER){
+        if (triggerType == TriggerType.EVENT_TRIGGER) {
             sb.append("Event Based Sensor  ");
-        }else{
+        } else {
             sb.append("Time Based Sensor  ");
         }
         sb.append(String.format("%.2f Hz", sensorSamplingRate));
-        if(triggerType == TriggerType.EVENT_TRIGGER){
+        if (triggerType == TriggerType.EVENT_TRIGGER) {
             sb.append("  Threshold: ").append(String.format("%.02f", threshold));
         }
         configInfo[1] = sb.toString();
         // -------------------------------------
-
 
         physics = new Physics(tau_sim, tau_sim / simSpeed);
         try {
@@ -86,14 +86,15 @@ public class Client extends Applet {
      */
     public void start() {
 
-        //Start animating!
+        // Start animating!
         if (physicsThread == null) {
             physicsThread = new Thread(physics);
         }
         physicsThread.start();
 
         if (sensorThread == null) {
-            sensorThread = new Thread(new Sensor(physics, out, triggerType, threshold, sensorSamplingPeriod_sim, sensorSamplingPeriod_phy));
+            sensorThread = new Thread(new Sensor(physics, out, triggerType, threshold, sensorSamplingPeriod_sim,
+                    sensorSamplingPeriod_phy));
         }
         sensorThread.start();
 
@@ -111,10 +112,11 @@ public class Client extends Applet {
     }
 
     /**
-     * This method stops the animating thread and gets rid of the objects necessary for double buffering.
+     * This method stops the animating thread and gets rid of the objects necessary
+     * for double buffering.
      */
     public void stop() {
-        //Stop the animating thread.
+        // Stop the animating thread.
         physicsThread = null;
         sensorThread = null;
         actuatorThread = null;
@@ -132,7 +134,6 @@ public class Client extends Applet {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
 
     }
 
