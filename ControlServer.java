@@ -35,7 +35,7 @@ public class ControlServer {
  */
 class PoleServer_handler implements Runnable {
     // Set the number of poles
-    private static final int NUM_POLES = 1;
+    private static final int NUM_POLES = 2;
 
     static ServerSocket providerSocket;
     Socket connection = null;
@@ -107,7 +107,11 @@ class PoleServer_handler implements Runnable {
 
                     System.out.println("server < pole[" + i + "]: " + angle + "  "
                             + angleDot + "  " + pos + "  " + posDot);
-                    actions[i] = calculate_action(angle, angleDot, pos, posDot);
+                    if (i == 0) {
+                        actions[i] = calculate_action(angle, angleDot, pos, posDot);
+                    } else {
+                        actions[i] = calculate_action_follower(angle, angleDot, pos, posDot, data[i - 1] * 4 + 2);
+                    }
                 }
 
                 sendMessage_doubleArray(actions);
@@ -161,6 +165,25 @@ class PoleServer_handler implements Runnable {
         double Kp = 1.5; // Proportional gain
         double Kd = 0.05; // Derivative gain
         double targetPos = 2.0; // Example target position
+        double posError = targetPos - pos; // Position error
+        double targetVel = posError / 10;
+        double targetAngle = (targetVel - posDot);
+        double angleControl = Kp * (angle - targetAngle * 0.0175) + Kd * angleDot;
+        System.out.println("pos:" + pos);
+        System.out.println("vel:" + posDot);
+        System.out.println("targetAn:" + targetAngle);
+        double posControl = 0;
+        double action = angleControl + posControl;
+        action = Math.max(-10, Math.min(10, action));
+        return action;
+    }
+
+    double calculate_action_follower(double angle, double angleDot, double pos,
+            double posDot, double leaderPos) {
+        // Constants for PD controller (Tune these constants)
+        double Kp = 1.5; // Proportional gain
+        double Kd = 0.05; // Derivative gain
+        double targetPos = leaderPos + 1; // Example target position
         double posError = targetPos - pos; // Position error
         double targetVel = posError / 10;
         double targetAngle = (targetVel - posDot);
