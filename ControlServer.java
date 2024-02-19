@@ -1,3 +1,4 @@
+
 /**
  * This program runs as a server and controls the force to be applied to balance the Inverted Pendulum system running on the clients.
  */
@@ -60,17 +61,19 @@ class PoleServer_handler implements Runnable {
         }
         t.start();
     }
+
     double angle, angleDot, pos, posDot, action = 0, i = 0;
 
     /**
      * This method receives the pole positions and calculates the updated value
      * and sends them across to the client.
      * It also sends the amount of force to be applied to balance the pendulum.
+     * 
      * @throws ioException
      */
     void control_pendulum(ObjectOutputStream out, ObjectInputStream in) {
         try {
-            while(true){
+            while (true) {
                 System.out.println("-----------------");
 
                 // read data from client
@@ -78,16 +81,16 @@ class PoleServer_handler implements Runnable {
 
                 // Do not process string data unless it is "bye", in which case,
                 // we close the server
-                if(obj instanceof String){
-                    System.out.println("STRING RECEIVED: "+(String) obj);
-                    if(obj.equals("bye")){
+                if (obj instanceof String) {
+                    System.out.println("STRING RECEIVED: " + (String) obj);
+                    if (obj.equals("bye")) {
                         break;
                     }
                     continue;
                 }
 
-                double[] data= (double[])(obj);
-                assert(data.length == NUM_POLES * 4);
+                double[] data = (double[]) (obj);
+                assert (data.length == NUM_POLES * 4);
                 double[] actions = new double[NUM_POLES];
 
                 // Get sensor data of each pole and calculate the action to be
@@ -97,14 +100,14 @@ class PoleServer_handler implements Runnable {
                 // the control of one pendulum needs sensing data from other
                 // pendulums.
                 for (int i = 0; i < NUM_POLES; i++) {
-                  angle = data[i*4+0];
-                  angleDot = data[i*4+1];
-                  pos = data[i*4+2];
-                  posDot = data[i*4+3];
+                    angle = data[i * 4 + 0];
+                    angleDot = data[i * 4 + 1];
+                    pos = data[i * 4 + 2];
+                    posDot = data[i * 4 + 3];
 
-                  System.out.println("server < pole["+i+"]: "+angle+"  "
-                      +angleDot+"  "+pos+"  "+posDot);
-                  actions[i] = calculate_action(angle, angleDot, pos, posDot);
+                    System.out.println("server < pole[" + i + "]: " + angle + "  "
+                            + angleDot + "  " + pos + "  " + posDot);
+                    actions[i] = calculate_action(angle, angleDot, pos, posDot);
                 }
 
                 sendMessage_doubleArray(actions);
@@ -133,6 +136,7 @@ class PoleServer_handler implements Runnable {
 
     /**
      * This method calls the controller method to balance the pendulum.
+     * 
      * @throws ioException
      */
     public void run() {
@@ -153,56 +157,57 @@ class PoleServer_handler implements Runnable {
     // independently. The interface needs to be changed if the control of one
     // pendulum needs sensing data from other pendulums.
     double calculate_action(double angle, double angleDot, double pos, double posDot) {
-      double action = 0;
-       // if (angle > 0 && angleDiff < 0) {
-       if (angle > 0) {
-           if (angle > 65 * 0.01745) {
-               action = 10;
-           } else if (angle > 60 * 0.01745) {
-               action = 8;
-           } else if (angle > 50 * 0.01745) {
-               action = 7.5;
-           } else if (angle > 30 * 0.01745) {
-               action = 4;
-           } else if (angle > 20 * 0.01745) {
-               action = 2;
-           } else if (angle > 10 * 0.01745) {
-               action = 0.5;
-           } else if(angle >5*0.01745){
-               action = 0.2;
-           } else if(angle >2*0.01745){
-               action = 0.1;
-           } else {
-               action = 0;
-           }
-       } else if (angle < 0) {
-           if (angle < -65 * 0.01745) {
-               action = -10;
-           } else if (angle < -60 * 0.01745) {
-               action = -8;
-           } else if (angle < -50 * 0.01745) {
-               action = -7.5;
-           } else if (angle < -30 * 0.01745) {
-               action = -4;
-           } else if (angle < -20 * 0.01745) {
-               action = -2;
-           } else if (angle < -10 * 0.01745) {
-               action = -0.5;
-           } else if(angle <-5*0.01745){
-               action = -0.2;
-           } else if(angle <-2*0.01745){
-               action = -0.1;
-           } else {
-               action = 0;
-           }
-       } else {
-           action = 0.;
-       }
-       return action;
-   }
+        double action = 0;
+        // if (angle > 0 && angleDiff < 0) {
+        if (angle > 0) {
+            if (angle > 65 * 0.01745) {
+                action = 10;
+            } else if (angle > 60 * 0.01745) {
+                action = 8;
+            } else if (angle > 50 * 0.01745) {
+                action = 7.5;
+            } else if (angle > 30 * 0.01745) {
+                action = 4;
+            } else if (angle > 20 * 0.01745) {
+                action = 2;
+            } else if (angle > 10 * 0.01745) {
+                action = 0.5;
+            } else if (angle > 5 * 0.01745) {
+                action = 0.2;
+            } else if (angle > 2 * 0.01745) {
+                action = 0.1;
+            } else {
+                action = 0;
+            }
+        } else if (angle < 0) {
+            if (angle < -65 * 0.01745) {
+                action = -10;
+            } else if (angle < -60 * 0.01745) {
+                action = -8;
+            } else if (angle < -50 * 0.01745) {
+                action = -7.5;
+            } else if (angle < -30 * 0.01745) {
+                action = -4;
+            } else if (angle < -20 * 0.01745) {
+                action = -2;
+            } else if (angle < -10 * 0.01745) {
+                action = -0.5;
+            } else if (angle < -5 * 0.01745) {
+                action = -0.2;
+            } else if (angle < -2 * 0.01745) {
+                action = -0.1;
+            } else {
+                action = 0;
+            }
+        } else {
+            action = 0.;
+        }
+        return action;
+    }
 
     /**
      * This method sends the Double message on the object output stream.
+     * 
      * @throws ioException
      */
     void sendMessage_double(double msg) {
@@ -224,7 +229,7 @@ class PoleServer_handler implements Runnable {
             out.flush();
 
             System.out.print("server> ");
-            for(int i=0; i< data.length; i++){
+            for (int i = 0; i < data.length; i++) {
                 System.out.print(data[i] + "  ");
             }
             System.out.println();
@@ -233,6 +238,5 @@ class PoleServer_handler implements Runnable {
             ioException.printStackTrace();
         }
     }
-
 
 }
